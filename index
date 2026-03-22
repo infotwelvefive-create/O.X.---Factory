@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>O.X. Factory - ระบบส่งงาน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+/* ══════════════════════════════════════════════
+   O.X. Factory — Complete Standalone Web App
+   Works in iOS & Android browsers
+   Data syncs to Google Sheets in real-time
+══════════════════════════════════════════════ */
+:root {
+  --pink:    #f472b6;
+  --pink-d:  #db2777;
+  --pink-dd: #be185d;
+  --pink-l:  #fde8f2;
+  --pink-xl: #fff0f7;
+  --blue:    #2563eb;
+  --blue-d:  #1d4ed8;
+  --blue-dd: #1e3a8a;
+  --blue-l:  #dbeafe;
+  --blue-xl: #eff6ff;
+  --grn:     #16a34a;
+  --grn-l:   #dcfce7;
+  --n950:#0c0a09; --n900:#1c1917; --n800:#292524;
+  --n700:#44403c; --n600:#57534e; --n500:#78716c;
+  --n400:#a8a29e; --n300:#d6d3d1; --n200:#e7e5e4;
+  --n100:#f5f5f4; --n50:#fafaf9;
+  --white:#ffffff;
+  --hdr:56px;
+  --tnav:50px;
+  --r-xs:8px; --r-sm:12px; --r-md:16px; --r-lg:22px; --r-xl:28px;
+  --sh-xs:0 1px 3px rgba(0,0,0,.07);
+  --sh-sm:0 4px 8px rgba(0,0,0,.08);
+  --sh-md:0 8px 24px rgba(0,0,0,.1);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{
+  height:100%;
+  font-family:'Sarabun',system-ui,sans-serif;
+  font-size:15px;line-height:1.5;
+  color:var(--n900);
+  background:#fdf0f6;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+#app{height:100dvh;position:relative;overflow:hidden}
+.scr{position:absolute;inset:0;display:none;flex-direction:column}
+.scr.active{display:flex}
+
+/* ══ ROLE SELECT ══ */
+#scrRole{
+  background:linear-gradient(160deg,#1c1917 0%,#292524 60%,#3b2a1a 100%);
+  align-items:center;justify-content:center;overflow-y:auto;
+}
+.role-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 10% 10%,rgba(244,114,182,.18) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 90%,rgba(37,99,235,.12) 0%,transparent 50%);
+}
+.role-wrap{width:100%;max-width:440px;padding:32px 20px 48px;position:relative;z-index:1}
+.role-brand{text-align:center;margin-bottom:36px}
+.role-logo{
+  font-size:52px;display:inline-block;
+  background:rgba(244,114,182,.12);
+  border:1px solid rgba(244,114,182,.2);
+  border-radius:20px;padding:16px 20px;margin-bottom:14px;
+  backdrop-filter:blur(8px);
+}
+.role-title{font-family:'Kanit',sans-serif;font-size:30px;font-weight:800;color:#fff;letter-spacing:.5px}
+.role-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+.role-choose{
+  text-align:center;font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.4);letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px;
+}
+.role-cards{display:flex;flex-direction:column;gap:12px}
+.role-card{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-lg);padding:18px 16px;cursor:pointer;
+  transition:all .2s;backdrop-filter:blur(8px);position:relative;overflow:hidden;
+}
+.role-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.role-tailor::before{background:linear-gradient(135deg,rgba(244,114,182,.18),transparent)}
+.role-manager::before{background:linear-gradient(135deg,rgba(37,99,235,.15),transparent)}
+.role-card:active{transform:scale(.97)}
+.role-card:active::before{opacity:1}
+.rc-icon-wrap{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;
+}
+.rc-red{background:rgba(244,114,182,.2);border:1px solid rgba(244,114,182,.3)}
+.rc-blue{background:rgba(37,99,235,.25);border:1px solid rgba(37,99,235,.3)}
+.rc-text{flex:1}
+.rc-title{font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;color:#fff}
+.rc-desc{font-size:12px;color:rgba(255,255,255,.45);margin-top:2px}
+.rc-arrow{font-size:26px;color:rgba(255,255,255,.3);font-weight:300}
+.rc-lock{font-size:20px;color:rgba(255,255,255,.4)}
+
+/* ══ PIN SCREEN ══ */
+#scrPin{
+  background:linear-gradient(160deg,var(--blue-dd) 0%,#1e3a8a 100%);
+  align-items:center;justify-content:center;overflow:hidden;
+}
+.pin-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 20%,rgba(255,255,255,.06) 0%,transparent 60%);
+}
+.pin-wrap{
+  width:100%;max-width:380px;padding:20px 20px 40px;
+  position:relative;z-index:1;display:flex;flex-direction:column;gap:20px;
+}
+.pin-back{
+  align-self:flex-start;color:rgba(255,255,255,.6);font-size:15px;font-weight:500;
+  padding:6px 4px;transition:color .2s;
+}
+.pin-back:active{color:#fff}
+.pin-brand{text-align:center}
+.pin-logo-box{
+  font-size:42px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:16px;display:inline-block;padding:12px 16px;margin-bottom:12px;
+}
+.pin-title{font-family:'Kanit',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.pin-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:4px}
+.pin-card{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--r-xl);padding:24px 20px 20px;backdrop-filter:blur(12px);
+}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:6px}
+.dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.3);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.dot.filled{
+  background:#fff;border-color:#fff;transform:scale(1.2);
+  box-shadow:0 0 10px rgba(255,255,255,.4);
+}
+.pin-err{text-align:center;min-height:22px;font-size:13px;color:#fca5a5;margin-bottom:14px}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.key{
+  padding:16px 8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-sm);font-family:'Kanit',sans-serif;
+  font-size:22px;font-weight:600;color:#fff;transition:all .1s;
+  -webkit-user-select:none;user-select:none;
+}
+.key:active{background:rgba(255,255,255,.25);transform:scale(.93)}
+.key-sm{font-size:13px;color:rgba(255,255,255,.5)}
+
+/* ══ HEADER ══ */
+.hdr{
+  flex-shrink:0;height:var(--hdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;padding-top:env(safe-area-inset-top,0px);
+  position:relative;z-index:20;
+}
+.hdr-red{
+  background:linear-gradient(135deg,#f472b6 0%,#db2777 100%);
+  box-shadow:0 2px 16px rgba(219,39,119,.3);
+}
+.hdr-blue{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dd) 100%);
+  box-shadow:0 2px 16px rgba(29,78,216,.4);
+}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.hdr-back-btn{
+  width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;font-weight:300;line-height:1;transition:all .2s;
+}
+.hdr-back-btn:active{background:rgba(255,255,255,.3);transform:scale(.9)}
+.hdr-logo{font-size:22px}
+.hdr-name{font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;color:#fff;line-height:1.1}
+.hdr-sub2{font-size:11px;color:rgba(255,255,255,.6)}
+.hdr-r{display:flex;gap:6px}
+.hdr-ico-btn{
+  width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:all .2s;
+}
+.hdr-ico-btn:active{background:rgba(255,255,255,.3);transform:scale(.9)}
+.tnav{display:flex;background:#fff;border-bottom:1.5px solid var(--n200);flex-shrink:0}
+.tnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:9px 4px;gap:2px;border-bottom:2.5px solid transparent;
+  color:var(--n500);font-size:10px;font-weight:600;transition:all .2s;
+}
+.tnav-btn span:first-child{font-size:17px}
+.tnav-lbl{font-size:11px}
+.tnav-btn.active{color:#db2777;border-bottom-color:#db2777}
+.scr-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff5fa}
+.tab{display:none}
+.tab.active{display:block;animation:pgIn .2s ease}
+@keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ FORM ══ */
+.form-wrap{
+  padding:16px 14px;display:flex;flex-direction:column;gap:14px;
+  padding-bottom:calc(24px + var(--safe-b));
+}
+.fsec-title{
+  font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;color:var(--n700);
+  padding-bottom:12px;border-bottom:2px solid #fde8f2;
+}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fl{font-size:13px;font-weight:700;color:var(--n700)}
+.fl-hint{font-size:11px;font-weight:400;color:var(--n400)}
+.req{color:#db2777}
+.sel-wrap{position:relative}
+.sel-wrap .fc{padding-right:34px}
+.sel-arr{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--n400);pointer-events:none;font-size:13px}
+.fc{
+  width:100%;padding:11px 13px;background:#fff;
+  border:1.5px solid var(--n200);border-radius:var(--r-sm);
+  font-family:'Sarabun',sans-serif;font-size:15px;color:var(--n900);
+  outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;
+}
+.fc:focus{border-color:#f472b6;background:#fff;box-shadow:0 0 0 3px rgba(244,114,182,.15)}
+.fc-num{text-align:center;font-family:'Kanit',sans-serif;font-size:20px;font-weight:700}
+.fc-ta{resize:none;min-height:76px}
+.week-row{
+  display:flex;align-items:center;gap:10px;background:#fff;
+  border:1.5px solid var(--n200);border-radius:var(--r-sm);padding:10px 13px;
+}
+.wlabel{font-size:13px;color:var(--n500)}
+.wbadge{
+  font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;
+  padding:3px 13px;border-radius:20px;background:#fde8f2;color:#c4547c;
+}
+.wbadge.w2{background:var(--blue-l);color:var(--blue-d)}
+.wbadge.we{background:var(--grn-l);color:var(--grn)}
+.upzone{
+  background:var(--pink-xl);border:2px dashed #f472b6;
+  border-radius:var(--r-sm);padding:22px 16px;text-align:center;
+  cursor:pointer;transition:all .2s;
+}
+.upzone:active{background:var(--pink-l);transform:scale(.98)}
+.upz-ico{font-size:30px;margin-bottom:6px}
+.upz-main{font-size:15px;font-weight:600;color:#c4547c}
+.upz-sub{font-size:12px;color:var(--n500);margin-top:3px}
+.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.ig-item{
+  position:relative;aspect-ratio:1;border-radius:var(--r-xs);overflow:hidden;
+  border:2px solid var(--n200);cursor:pointer;
+}
+.ig-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ig-del{
+  position:absolute;top:3px;right:3px;width:20px;height:20px;
+  background:rgba(0,0,0,.6);border-radius:50%;color:#fff;font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+}
+.btn-submit{
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,#f472b6 0%,#db2777 100%);
+  color:#fff;border-radius:var(--r-sm);font-family:'Kanit',sans-serif;
+  font-size:17px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 16px rgba(219,39,119,.35);transition:all .2s;margin-top:4px;
+}
+.btn-submit:active{transform:scale(.98);box-shadow:0 2px 8px rgba(219,39,119,.25)}
+.btn-submit:disabled{opacity:.5;pointer-events:none}
+
+/* ══ FILTER STRIP ══ */
+.fstrip{
+  display:flex;gap:8px;padding:11px 14px;
+  background:#fff;border-bottom:1px solid var(--n200);overflow-x:auto;scrollbar-width:none;
+}
+.fstrip::-webkit-scrollbar{display:none}
+.fs-btn{
+  flex:0 0 auto;padding:6px 16px;border:1.5px solid var(--n200);border-radius:20px;
+  font-size:13px;font-weight:600;color:var(--n500);white-space:nowrap;transition:all .2s;
+}
+.fs-btn.active{background:#db2777;border-color:#db2777;color:#fff}
+
+/* ══ RECORD CARDS ══ */
+.clist{
+  padding:12px 14px;display:flex;flex-direction:column;gap:10px;
+  padding-bottom:calc(16px + var(--safe-b));
+}
+.rcard{
+  background:#fff;border-radius:var(--r-md);padding:13px;
+  box-shadow:var(--sh-xs);border:1px solid var(--n200);cursor:pointer;
+  transition:transform .15s;position:relative;overflow:hidden;
+}
+.rcard::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:4px;border-radius:4px 0 0 4px;background:#f472b6;
+}
+.rcard.w2::before{background:var(--blue)}
+.rcard.we::before{background:var(--grn)}
+.rcard:active{transform:scale(.99)}
+.rc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.rc-tech{
+  font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.rc-wbadge{
+  padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;
+  font-family:'Kanit',sans-serif;background:#fde8f2;color:#c4547c;
+}
+.rc-wbadge.w2{background:var(--blue-l);color:var(--blue-d)}
+.rc-wbadge.we{background:var(--grn-l);color:var(--grn)}
+.rc-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--n500);margin-bottom:6px}
+.rc-note{font-size:12px;color:var(--n500);font-style:italic;margin-bottom:7px}
+.rc-imgs{display:flex;gap:6px;flex-wrap:wrap}
+.rc-img{
+  width:54px;height:54px;object-fit:cover;
+  border-radius:8px;border:1.5px solid var(--n200);cursor:pointer;
+}
+.rc-more{
+  width:54px;height:54px;background:var(--n100);border-radius:8px;
+  border:1.5px solid var(--n200);display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--n500);
+}
+.empty-st{
+  text-align:center;padding:36px 20px;color:var(--n400);font-size:14px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.empty-st span{font-size:36px}
+
+/* ══ SETTINGS ══ */
+.sett-wrap{padding:16px 14px;padding-bottom:calc(24px + var(--safe-b))}
+.sett-title{font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;margin-bottom:14px}
+.sett-add{display:flex;gap:10px;margin-bottom:16px}
+.btn-add{
+  flex-shrink:0;padding:11px 16px;background:#db2777;color:#fff;
+  border-radius:var(--r-sm);font-family:'Kanit',sans-serif;
+  font-size:15px;font-weight:700;white-space:nowrap;transition:all .2s;
+}
+.btn-add:active{background:#c4547c;transform:scale(.96)}
+.tech-list{display:flex;flex-direction:column;gap:8px}
+.tech-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid var(--n200);border-radius:var(--r-sm);padding:12px 13px;
+}
+.tech-name{font-size:15px;font-weight:500}
+.btn-del-t{
+  padding:5px 12px;background:#fff0f7;color:#db2777;
+  border:1px solid #fde8f2;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s;
+}
+.btn-del-t:active{background:#db2777;color:#fff}
+
+/* ══ MANAGER BANNER ══ */
+.mgr-banner{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dd) 100%);
+  padding:18px 16px 20px;
+}
+.mb-loading{color:rgba(255,255,255,.6);font-size:14px;text-align:center;padding:8px 0}
+.mb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.mb-item{text-align:center;position:relative}
+.mb-item+.mb-item::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:1px;background:rgba(255,255,255,.2);
+}
+.mb-val{font-family:'Kanit',sans-serif;font-size:24px;font-weight:800;color:#fff;line-height:1}
+.mb-lbl{font-size:10px;color:rgba(255,255,255,.55);margin-top:4px}
+
+/* ══ MANAGER TOOLBAR ══ */
+.mgr-toolbar{
+  background:#fff;border-bottom:1px solid var(--n200);padding:12px 14px;
+  display:flex;flex-direction:column;gap:10px;position:sticky;top:0;z-index:10;
+}
+.mgr-search-wrap{position:relative}
+.mgr-sico{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px}
+.mgr-sinp{
+  width:100%;padding:10px 14px 10px 34px;background:var(--n100);
+  border:1.5px solid var(--n200);border-radius:24px;
+  font-family:'Sarabun',sans-serif;font-size:14px;color:var(--n900);
+  outline:none;transition:all .2s;-webkit-appearance:none;
+}
+.mgr-sinp:focus{background:#fff;border-color:var(--blue)}
+.mgr-frow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mgr-frow::-webkit-scrollbar{display:none}
+.mf-btn{
+  flex:0 0 auto;padding:6px 14px;border:1.5px solid var(--n200);border-radius:20px;
+  font-size:12px;font-weight:600;color:var(--n500);white-space:nowrap;transition:all .2s;
+}
+.mf-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ══ TECH CARDS ══ */
+.mgr-content{
+  padding:12px 14px;display:flex;flex-direction:column;gap:14px;
+  padding-bottom:calc(24px + var(--safe-b));
+}
+.tc{background:#fff;border-radius:var(--r-md);box-shadow:var(--sh-sm);border:1px solid var(--n200);overflow:hidden}
+.tc-head{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dd) 100%);
+  padding:13px 15px;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;-webkit-user-select:none;user-select:none;
+}
+.tc-hl{display:flex;align-items:center;gap:11px}
+.tc-av{
+  width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.tc-name{font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;color:#fff}
+.tc-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.tc-total{
+  background:rgba(255,255,255,.18);color:#fff;
+  font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;
+  padding:4px 13px;border-radius:20px;display:flex;align-items:center;gap:6px;
+}
+.tc-chev{font-size:18px;color:rgba(255,255,255,.6);transition:transform .25s;margin-left:6px}
+.tc-chev.open{transform:rotate(180deg)}
+.tc-stats{
+  display:flex;
+  background:linear-gradient(135deg,rgba(37,99,235,.08) 0%,rgba(30,58,138,.06) 100%);
+  border-bottom:1px solid var(--blue-l);
+}
+.tc-stat{flex:1;text-align:center;padding:9px 4px}
+.tc-stat+.tc-stat{border-left:1px solid var(--blue-l)}
+.tc-sv{font-family:'Kanit',sans-serif;font-size:18px;font-weight:800;color:var(--blue-d)}
+.tc-sl{font-size:10px;color:var(--n500);margin-top:2px}
+.tc-body{display:none}
+.tc-body.open{display:block}
+.tc-wtabs{display:flex;border-bottom:1.5px solid var(--n200);overflow-x:auto;scrollbar-width:none}
+.tc-wtabs::-webkit-scrollbar{display:none}
+.wt-btn{
+  flex:1;min-width:max-content;padding:9px 14px;
+  font-size:12px;font-weight:600;color:var(--n500);
+  border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap;transition:all .2s;
+}
+.wt-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tc-panel{display:none;flex-direction:column;gap:10px;padding:10px 13px}
+.tc-panel.active{display:flex}
+.rri{border:1px solid var(--n200);border-radius:var(--r-sm);overflow:hidden;background:var(--n50)}
+.rri-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;background:#fff;border-bottom:1px solid var(--n200);
+}
+.rri-date{font-family:'Kanit',sans-serif;font-size:14px;font-weight:700;color:var(--n800)}
+.rri-meta{font-size:11px;color:var(--n500);margin-top:2px}
+.btn-del-r{
+  padding:5px 11px;background:#fff0f7;color:#db2777;
+  border:1px solid #fde8f2;border-radius:8px;font-size:12px;font-weight:600;
+  white-space:nowrap;transition:all .2s;flex-shrink:0;
+}
+.btn-del-r:active{background:#db2777;color:#fff}
+.rri-note{padding:6px 12px;font-size:12px;color:var(--n500);font-style:italic;border-bottom:1px solid var(--n200)}
+.rri-gallery{padding:10px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.rri-gallery img{
+  width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;
+  border:1.5px solid var(--n200);transition:opacity .15s;
+}
+.rri-gallery img:active{opacity:.75}
+.rri-more{
+  background:var(--n200);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--n600);aspect-ratio:1;cursor:pointer;
+}
+
+/* ══ MODAL ══ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,0);z-index:80;
+  display:flex;align-items:flex-end;pointer-events:none;transition:background .3s;
+}
+.modal-bg.open{background:rgba(0,0,0,.55);pointer-events:all;backdrop-filter:blur(3px)}
+.modal-sheet{
+  width:100%;max-width:600px;margin:0 auto;background:#fff;
+  border-radius:24px 24px 0 0;max-height:90dvh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);
+  padding-bottom:calc(20px + var(--safe-b));
+}
+.modal-bg.open .modal-sheet{transform:translateY(0);transition:transform .35s cubic-bezier(0,.72,.32,1)}
+.modal-handle{width:40px;height:4px;background:var(--n200);border-radius:2px;margin:12px auto 4px}
+.md-hd{padding:10px 18px 14px;border-bottom:1px solid var(--n100)}
+.md-title{font-family:'Kanit',sans-serif;font-size:20px;font-weight:700}
+.md-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.md-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--n100);color:var(--n700)}
+.md-tag.w1{background:#fde8f2;color:#c4547c}
+.md-tag.w2{background:var(--blue-l);color:var(--blue-d)}
+.md-tag.we{background:var(--grn-l);color:var(--grn)}
+.md-note{margin:12px 18px;padding:10px 13px;background:var(--n50);border-radius:var(--r-sm);font-size:13px;color:var(--n600)}
+.md-gallery{padding:12px 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.md-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;cursor:pointer;border:1.5px solid var(--n200)}
+.btn-del-full{
+  width:calc(100% - 36px);margin:4px 18px 0;padding:14px;background:#db2777;color:#fff;
+  border-radius:var(--r-sm);font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;
+}
+.btn-del-full:active{background:#c4547c;transform:scale(.98)}
+
+/* ══ LIGHTBOX ══ */
+.lb{
+  position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.lb.open{opacity:1;pointer-events:all}
+.lb-x{
+  position:absolute;top:16px;right:16px;width:40px;height:40px;
+  background:rgba(255,255,255,.15);border-radius:50%;
+  color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;z-index:2;
+}
+.lb-x:active{background:rgba(255,255,255,.3)}
+.lb img{max-width:96%;max-height:88%;object-fit:contain;border-radius:8px}
+.lb-prev,.lb-next{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;color:#fff;cursor:pointer;z-index:2;font-weight:300;line-height:1;
+}
+.lb-prev{left:12px}.lb-next{right:12px}
+.lb-prev:active,.lb-next:active{background:rgba(255,255,255,.3)}
+.lb-ctr{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.5);color:rgba(255,255,255,.8);
+  font-size:13px;padding:4px 14px;border-radius:20px;
+}
+
+/* ══ TOAST + LOADER ══ */
+.toast{
+  position:fixed;bottom:calc(24px + var(--safe-b));left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--n900);color:#fff;padding:11px 22px;border-radius:24px;
+  font-size:14px;z-index:200;opacity:0;pointer-events:none;transition:all .3s;
+  white-space:nowrap;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis;
+  box-shadow:var(--sh-md);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--grn)}.toast.err{background:#db2777}
+.loader-ov{
+  position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:300;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);
+}
+.loader-ov.show{display:flex}
+.loader-box{text-align:center}
+.loader-ring{
+  width:46px;height:46px;border:4px solid #fde8f2;border-top-color:#db2777;
+  border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 14px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-size:15px;color:var(--n500)}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}
+}
+.shake{animation:shake .4s ease}
+
+/* ══ CONFIG MODAL ══ */
+.cfg-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px);
+}
+.cfg-box{
+  background:#fff;border-radius:20px;padding:24px 20px;
+  width:100%;max-width:400px;
+}
+.cfg-title{font-family:'Kanit',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px}
+.cfg-sub{font-size:13px;color:var(--n500);margin-bottom:16px}
+.cfg-inp{
+  width:100%;padding:12px 14px;border:1.5px solid var(--n200);border-radius:var(--r-sm);
+  font-size:14px;outline:none;margin-bottom:10px;font-family:'Sarabun',sans-serif;
+}
+.cfg-inp:focus{border-color:var(--blue)}
+.cfg-btns{display:flex;gap:10px}
+.cfg-btn{
+  flex:1;padding:12px;border-radius:var(--r-sm);font-family:'Kanit',sans-serif;
+  font-size:15px;font-weight:700;transition:all .2s;
+}
+.cfg-btn-save{background:var(--blue);color:#fff}
+.cfg-btn-save:active{background:var(--blue-d)}
+.cfg-btn-skip{background:var(--n100);color:var(--n600)}
+.cfg-btn-skip:active{background:var(--n200)}
+.cfg-note{font-size:11px;color:var(--n400);margin-top:8px;text-align:center}
+
+@media(min-width:600px){
+  .img-grid{grid-template-columns:repeat(6,1fr)}
+  .rri-gallery{grid-template-columns:repeat(4,1fr)}
+  .md-gallery{grid-template-columns:repeat(4,1fr)}
+}
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ CONFIG MODAL (shown first if no URL set) ══ -->
+  <div id="cfgModal" class="cfg-modal" style="display:none">
+    <div class="cfg-box">
+      <div class="cfg-title">⚙️ ตั้งค่า Google Apps Script</div>
+      <div class="cfg-sub">ใส่ URL ของ Google Apps Script Web App เพื่อเชื่อมต่อกับ Google Sheets</div>
+      <input type="url" id="cfgUrl" class="cfg-inp" placeholder="https://script.google.com/macros/s/...">
+      <div class="cfg-btns">
+        <button class="cfg-btn cfg-btn-save" onclick="saveConfig()">💾 บันทึก URL</button>
+        <button class="cfg-btn cfg-btn-skip" onclick="skipConfig()">ข้าม (Demo)</button>
+      </div>
+      <div class="cfg-note">URL จะถูกบันทึกใน localStorage ของเบราว์เซอร์นี้</div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 1: ROLE SELECT ══ -->
+  <div id="scrRole" class="scr active">
+    <div class="role-bg"></div>
+    <div class="role-wrap">
+      <div class="role-brand">
+        <div class="role-logo">🏭</div>
+        <h1 class="role-title">O.X. Factory</h1>
+        <p class="role-sub">ระบบบันทึกการส่งงาน</p>
+      </div>
+      <p class="role-choose">เลือกบทบาทของคุณ</p>
+      <div class="role-cards">
+        <div class="role-card role-tailor" onclick="enterTailor()">
+          <div class="rc-icon-wrap rc-red"><span>✂️</span></div>
+          <div class="rc-text">
+            <div class="rc-title">ส่งงานช่าง</div>
+            <div class="rc-desc">บันทึกส่งงาน · ประวัติ · ตั้งค่า</div>
+          </div>
+          <div class="rc-arrow">›</div>
+        </div>
+        <div class="role-card role-manager" onclick="openPinScreen()">
+          <div class="rc-icon-wrap rc-blue"><span>📊</span></div>
+          <div class="rc-text">
+            <div class="rc-title">รายงานสรุปช่าง</div>
+            <div class="rc-desc">ผู้จัดการ · ดูรายงาน · รูปภาพ</div>
+          </div>
+          <div class="rc-lock">🔒</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <button onclick="showConfig()" style="color:rgba(255,255,255,.3);font-size:12px;padding:8px">⚙️ ตั้งค่า URL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2: PIN ══ -->
+  <div id="scrPin" class="scr">
+    <div class="pin-bg"></div>
+    <div class="pin-wrap">
+      <button class="pin-back" onclick="backToRole()">‹ กลับ</button>
+      <div class="pin-brand">
+        <div class="pin-logo-box">📊</div>
+        <div class="pin-title">รายงานสรุปช่าง</div>
+        <div class="pin-sub">กรอกรหัส PIN ผู้จัดการ</div>
+      </div>
+      <div class="pin-card">
+        <div class="pin-dots">
+          <span class="dot" id="d0"></span>
+          <span class="dot" id="d1"></span>
+          <span class="dot" id="d2"></span>
+          <span class="dot" id="d3"></span>
+        </div>
+        <div class="pin-err" id="pinErr"></div>
+        <div class="keypad">
+          <button class="key" onclick="pk('1')">1</button>
+          <button class="key" onclick="pk('2')">2</button>
+          <button class="key" onclick="pk('3')">3</button>
+          <button class="key" onclick="pk('4')">4</button>
+          <button class="key" onclick="pk('5')">5</button>
+          <button class="key" onclick="pk('6')">6</button>
+          <button class="key" onclick="pk('7')">7</button>
+          <button class="key" onclick="pk('8')">8</button>
+          <button class="key" onclick="pk('9')">9</button>
+          <button class="key key-sm" onclick="clearPin()">ล้าง</button>
+          <button class="key" onclick="pk('0')">0</button>
+          <button class="key key-sm" onclick="delPin()">⌫</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 3A: TAILOR APP ══ -->
+  <div id="scrTailor" class="scr">
+    <header class="hdr hdr-red">
+      <div class="hdr-l">
+        <button class="hdr-back-btn" onclick="exitToRole()">‹</button>
+        <span class="hdr-logo">✂️</span>
+        <div>
+          <div class="hdr-name">ส่งงานช่าง</div>
+          <div class="hdr-sub2">O.X. Factory</div>
+        </div>
+      </div>
+      <div class="hdr-r">
+        <button class="hdr-ico-btn" onclick="openSheet()" title="เปิด Sheet">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+      </div>
+    </header>
+    <div class="tnav">
+      <button class="tnav-btn active" onclick="switchTailorTab(this,'ttRecord')">
+        <span>📝</span><span class="tnav-lbl">บันทึก</span>
+      </button>
+      <button class="tnav-btn" onclick="switchTailorTab(this,'ttHistory')">
+        <span>📋</span><span class="tnav-lbl">ประวัติ</span>
+      </button>
+      <button class="tnav-btn" onclick="switchTailorTab(this,'ttSettings')">
+        <span>⚙️</span><span class="tnav-lbl">ตั้งค่า</span>
+      </button>
+    </div>
+    <div class="scr-body">
+      <!-- TAB: บันทึก -->
+      <div id="ttRecord" class="tab active">
+        <div class="form-wrap">
+          <div class="fsec-title">📝 บันทึกการส่งงาน</div>
+          <div class="fg">
+            <label class="fl">ชื่อช่าง <span class="req">*</span></label>
+            <div class="sel-wrap">
+              <select id="techSel" class="fc">
+                <option value="">— เลือกช่าง —</option>
+              </select>
+              <span class="sel-arr">▾</span>
+            </div>
+          </div>
+          <div class="fg">
+            <label class="fl">ชื่อรูป / รุ่น</label>
+            <input type="text" id="modelName" class="fc" placeholder="เช่น เสื้อเชิ้ต รุ่น A...">
+          </div>
+          <div class="fg-row">
+            <div class="fg">
+              <label class="fl">วันที่ <span class="req">*</span></label>
+              <input type="date" id="workDate" class="fc" onchange="onDateChg()">
+            </div>
+            <div class="fg">
+              <label class="fl">จำนวนตัว <span class="req">*</span></label>
+              <input type="number" id="qty" class="fc fc-num" placeholder="0" min="0" inputmode="numeric">
+            </div>
+          </div>
+          <div class="week-row">
+            <span class="wlabel">รอบจ่าย:</span>
+            <span class="wbadge" id="wBadge">—</span>
+          </div>
+          <div class="fg">
+            <label class="fl">หมายเหตุ</label>
+            <textarea id="noteInp" class="fc fc-ta" placeholder="(ถ้ามี)"></textarea>
+          </div>
+          <div class="fg">
+            <label class="fl">📷 รูปภาพหลักฐาน <span class="fl-hint">(เลือกได้หลายรูป)</span></label>
+            <div class="upzone" onclick="trigUpload()">
+              <div class="upz-ico">📸</div>
+              <div class="upz-main">แตะเพื่อเลือกรูปภาพ</div>
+              <div class="upz-sub">รองรับ iOS &amp; Android · หลายรูปพร้อมกัน</div>
+            </div>
+            <input type="file" id="imgInp" accept="image/*" multiple style="display:none" onchange="onImgSel(event)">
+            <div id="imgPrev" class="img-grid"></div>
+          </div>
+          <button class="btn-submit" id="btnSubmit" onclick="submitRec()">
+            💾 บันทึกการส่งงาน
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB: ประวัติ -->
+      <div id="ttHistory" class="tab">
+        <div class="fstrip">
+          <button class="fs-btn active" onclick="setHF(this,'all')">ทั้งหมด</button>
+          <button class="fs-btn" onclick="setHF(this,'Week 1')">Week 1</button>
+          <button class="fs-btn" onclick="setHF(this,'Week 2')">Week 2</button>
+          <button class="fs-btn" onclick="setHF(this,'Week End')">Week End</button>
+        </div>
+        <div id="histList" class="clist">
+          <div class="empty-st"><span>⏳</span>กำลังโหลด...</div>
+        </div>
+      </div>
+
+      <!-- TAB: ตั้งค่า -->
+      <div id="ttSettings" class="tab">
+        <div class="sett-wrap">
+          <div class="sett-title">⚙️ จัดการรายชื่อช่าง</div>
+          <div class="sett-add">
+            <input type="text" id="newTechInp" class="fc" placeholder="ชื่อช่างใหม่...">
+            <button class="btn-add" onclick="addTech()">+ เพิ่ม</button>
+          </div>
+          <div id="techListEl" class="tech-list">
+            <div class="empty-st"><span>⏳</span>กำลังโหลด...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 3B: MANAGER APP ══ -->
+  <div id="scrManager" class="scr">
+    <header class="hdr hdr-blue">
+      <div class="hdr-l">
+        <button class="hdr-back-btn" onclick="exitToRole()">‹</button>
+        <span class="hdr-logo">📊</span>
+        <div>
+          <div class="hdr-name">รายงานสรุปช่าง</div>
+          <div class="hdr-sub2">O.X. Factory</div>
+        </div>
+      </div>
+      <div class="hdr-r">
+        <button class="hdr-ico-btn" onclick="openSheet()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+        <button class="hdr-ico-btn" onclick="exitToRole()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+    <div class="scr-body">
+      <div class="mgr-banner" id="mgrBanner">
+        <div class="mb-loading">กำลังโหลด...</div>
+      </div>
+      <div class="mgr-toolbar">
+        <div class="mgr-search-wrap">
+          <span class="mgr-sico">🔍</span>
+          <input type="text" id="mgrSearch" class="mgr-sinp" placeholder="ค้นหาชื่อช่าง...">
+        </div>
+        <div class="mgr-frow">
+          <button class="mf-btn active" onclick="setMF(this,'all')">ทั้งหมด</button>
+          <button class="mf-btn" onclick="setMF(this,'Week 1')">Week 1</button>
+          <button class="mf-btn" onclick="setMF(this,'Week 2')">Week 2</button>
+          <button class="mf-btn" onclick="setMF(this,'Week End')">Week End</button>
+        </div>
+      </div>
+      <div id="mgrContent" class="mgr-content">
+        <div class="empty-st"><span>⏳</span>กำลังโหลด...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL ══ -->
+  <div id="modal" class="modal-bg" onclick="onMBg(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lb" class="lb" onclick="lbClose()">
+    <button class="lb-x" onclick="lbClose()">✕</button>
+    <div class="lb-prev" onclick="lbNav(-1,event)">‹</div>
+    <img id="lbImg" src="" alt="" onclick="event.stopPropagation()">
+    <div class="lb-next" onclick="lbNav(1,event)">›</div>
+    <div class="lb-ctr" id="lbCtr"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <!-- LOADER -->
+  <div id="loader" class="loader-ov">
+    <div class="loader-box">
+      <div class="loader-ring"></div>
+      <div class="loader-txt" id="loaderTxt">กำลังดำเนินการ...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   O.X. Factory — Standalone Web App
+   Connects to Google Apps Script Web App via fetch API
+   PIN: 1125
+══════════════════════════════════════════════════════════ */
+var MANAGER_PIN = '1125';
+var SCRIPT_URL_KEY = 'ox_factory_script_url';
+
+var S = {
+  pin: '',
+  allRecords: [],
+  techs: [],
+  pendingImgs: [],
+  histFilter: 'all',
+  mgrFilter: 'all',
+  lbUrls: [],
+  lbIdx: 0,
+  _rptData: [],
+  histLoaded: false,
+  demoMode: false
+};
+
+// ── HELPERS ──
+function q(s)  { return document.querySelector(s); }
+function qa(s) { return document.querySelectorAll(s); }
+function esc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function getScriptUrl() {
+  return localStorage.getItem(SCRIPT_URL_KEY) || '';
+}
+
+// ── API CALL ──
+// Google Apps Script ต้องใช้ JSONP สำหรับ GET และ no-cors POST
+// เพื่อหลีกเลี่ยง CORS error จาก GitHub Pages
+async function apiCall(action, data) {
+  var url = getScriptUrl();
+  if (!url || S.demoMode) {
+    return demoHandler(action, data);
+  }
+  try {
+    if (data) {
+      // POST — ส่งเป็น application/x-www-form-urlencoded เพื่อหลีกเลี่ยง preflight CORS
+      var body = 'payload=' + encodeURIComponent(JSON.stringify({ action: action, ...data }));
+      var res = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body
+      });
+      var json = await res.json();
+      return json;
+    } else {
+      // GET — ใช้ JSONP เพื่อหลีกเลี่ยง CORS
+      return await jsonpCall(url + '?action=' + action);
+    }
+  } catch(e) {
+    console.error('API Error:', e);
+    return { success: false, error: e.message };
+  }
+}
+
+function jsonpCall(url) {
+  return new Promise(function(resolve) {
+    var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    var script = document.createElement('script');
+    var timer = setTimeout(function(){
+      cleanup();
+      resolve({ success:false, error:'Timeout' });
+    }, 15000);
+    function cleanup(){ delete window[cb]; script.remove(); clearTimeout(timer); }
+    window[cb] = function(data){ cleanup(); resolve(data); };
+    script.src = url + '&callback=' + cb;
+    script.onerror = function(){ cleanup(); resolve({ success:false, error:'Script load error' }); };
+    document.head.appendChild(script);
+  });
+}
+
+// ── DEMO MODE DATA ──
+var _demoTechs = ['วิกี้','รส','ริน','แอน','พลอย','วรรณ'];
+var _demoRecords = [
+  {
+    id:'demo1', techName:'วิกี้', modelName:'เทส', date:'2026-03-20',
+    quantity:5, week:'Week 2', note:'', imageUrls:[]
+  },
+  {
+    id:'demo2', techName:'พลอย', modelName:'เทส3', date:'2026-03-20',
+    quantity:1, week:'Week 2', note:'', imageUrls:[]
+  },
+  {
+    id:'demo3', techName:'วิกี้', modelName:'เทส3', date:'2026-03-20',
+    quantity:1, week:'Week 2', note:'', imageUrls:[]
+  }
+];
+var _demoIdCounter = 100;
+
+function demoHandler(action, data) {
+  if (action === 'getTechnicians') {
+    return { success:true, data: _demoTechs.slice() };
+  }
+  if (action === 'getAllRecords') {
+    return { success:true, data: _demoRecords.slice().reverse() };
+  }
+  if (action === 'getSummaryReport') {
+    var grouped = {};
+    _demoTechs.forEach(function(t){ grouped[t] = { techName:t, records:[], week1:0, week2:0, weekEnd:0, total:0 }; });
+    _demoRecords.forEach(function(r){
+      if (!grouped[r.techName]) grouped[r.techName] = { techName:r.techName, records:[], week1:0, week2:0, weekEnd:0, total:0 };
+      grouped[r.techName].records.push(r);
+      grouped[r.techName].total += r.quantity;
+      if (r.week==='Week 1') grouped[r.techName].week1 += r.quantity;
+      if (r.week==='Week 2') grouped[r.techName].week2 += r.quantity;
+      if (r.week==='Week End') grouped[r.techName].weekEnd += r.quantity;
+    });
+    var arr = Object.values(grouped).filter(function(g){ return g.records.length > 0; });
+    return { success:true, data: arr };
+  }
+  if (action === 'saveWorkRecord') {
+    var rec = {
+      id: 'demo' + (++_demoIdCounter),
+      techName: data.techName,
+      modelName: data.modelName || '',
+      date: data.date,
+      quantity: data.quantity,
+      week: data.week || weekOf(data.date),
+      note: data.note || '',
+      imageUrls: data.imageUrls || []
+    };
+    _demoRecords.push(rec);
+    return { success:true, week: rec.week };
+  }
+  if (action === 'deleteRecord') {
+    var idx = _demoRecords.findIndex(function(r){ return r.id === data.id; });
+    if (idx > -1) _demoRecords.splice(idx, 1);
+    return { success:true };
+  }
+  if (action === 'addTechnician') {
+    if (!_demoTechs.includes(data.name)) _demoTechs.push(data.name);
+    return { success:true };
+  }
+  if (action === 'deleteTechnician') {
+    var idx = _demoTechs.indexOf(data.name);
+    if (idx > -1) _demoTechs.splice(idx, 1);
+    return { success:true };
+  }
+  if (action === 'uploadImage') {
+    // In demo mode, return a placeholder
+    return { success:true, url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23f0f0f0"/><text x="50" y="55" text-anchor="middle" font-size="12" fill="%23999">IMG</text></svg>' };
+  }
+  if (action === 'getSpreadsheetUrl') {
+    return { success:true, url: 'https://docs.google.com' };
+  }
+  return { success:false, error:'Unknown action' };
+}
+
+// ── CONFIG ──
+function showConfig() {
+  var modal = q('#cfgModal');
+  modal.style.display = 'flex';
+  var inp = q('#cfgUrl');
+  inp.value = getScriptUrl();
+}
+function saveConfig() {
+  var url = q('#cfgUrl').value.trim();
+  if (!url || !url.startsWith('https://')) {
+    alert('URL ไม่ถูกต้อง กรุณาใส่ URL ที่ขึ้นต้นด้วย https://');
+    return;
+  }
+  localStorage.setItem(SCRIPT_URL_KEY, url);
+  S.demoMode = false;
+  q('#cfgModal').style.display = 'none';
+  toast('บันทึก URL เรียบร้อย','ok');
+}
+function skipConfig() {
+  S.demoMode = true;
+  q('#cfgModal').style.display = 'none';
+  toast('Demo Mode - ข้อมูลไม่ถูกบันทึก','ok');
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function() {
+  setToday();
+  onDateChg();
+  var url = getScriptUrl();
+  if (!url) {
+    showConfig();
+  }
+  // Swipe for lightbox
+  var sx=0;
+  document.addEventListener('touchstart',function(e){
+    var lb=q('#lb');
+    if(lb&&lb.classList.contains('open')) sx=e.touches[0].clientX;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    var lb=q('#lb');
+    if(!lb||!lb.classList.contains('open')) return;
+    var dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>50) lbNav(dx<0?1:-1);
+  },{passive:true});
+});
+
+// ── SCREEN NAV ──
+function show(id) {
+  qa('.scr').forEach(function(s){ s.classList.remove('active'); });
+  q('#'+id).classList.add('active');
+}
+function enterTailor() { show('scrTailor'); S.histLoaded=false; loadTechs(); }
+function openPinScreen() { show('scrPin'); }
+function backToRole() { clearPin(); show('scrRole'); }
+function exitToRole() {
+  S.pin=''; S.pendingImgs=[]; S.histLoaded=false; clearForm(); show('scrRole');
+}
+
+// ── PIN ──
+function pk(n) {
+  if(S.pin.length>=4) return;
+  S.pin+=n; refreshDots();
+  if(S.pin.length===4) setTimeout(checkPin,150);
+}
+function delPin() { S.pin=S.pin.slice(0,-1); refreshDots(); }
+function clearPin() {
+  S.pin=''; refreshDots();
+  var e=q('#pinErr'); if(e) e.textContent='';
+}
+function refreshDots() {
+  for(var i=0;i<4;i++){
+    var d=q('#d'+i);
+    if(d) d.classList.toggle('filled', i<S.pin.length);
+  }
+}
+function checkPin() {
+  if(S.pin===MANAGER_PIN) {
+    show('scrManager'); S.pin=''; refreshDots();
+    var e=q('#pinErr'); if(e) e.textContent='';
+    loadManager();
+  } else {
+    var e=q('#pinErr'); if(e) e.textContent='รหัสไม่ถูกต้อง';
+    var dots=q('.pin-dots');
+    if(dots){ dots.classList.add('shake'); setTimeout(function(){ dots.classList.remove('shake'); },400); }
+    S.pin=''; refreshDots();
+  }
+}
+
+// ── TAILOR TABS ──
+function switchTailorTab(btn, tabId) {
+  qa('.tnav-btn').forEach(function(b){ b.classList.remove('active'); });
+  qa('.tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  q('#'+tabId).classList.add('active');
+  if(tabId==='ttHistory'&&!S.histLoaded) loadHistory();
+  if(tabId==='ttSettings') loadTechs();
+}
+
+// ── DATE / WEEK ──
+function setToday() {
+  var el=q('#workDate'); if(!el) return;
+  var d=new Date();
+  el.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function onDateChg() {
+  var el=q('#workDate'), val=el?el.value:'';
+  var wk=weekOf(val);
+  var b=q('#wBadge'); if(!b) return;
+  b.textContent=wk||'--'; b.className='wbadge';
+  if(wk==='Week 2') b.classList.add('w2');
+  if(wk==='Week End') b.classList.add('we');
+}
+function weekOf(ds) {
+  if(!ds) return '';
+  var d=new Date(ds+'T00:00:00'); if(isNaN(d)) return '';
+  var day=d.getDate();
+  var last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  if(day===last) return 'Week End';
+  return day<=14?'Week 1':'Week 2';
+}
+function thDate(ds) {
+  if(!ds) return '';
+  var d=new Date((typeof ds==='string'&&ds.indexOf('-')>-1)?ds+'T00:00:00':ds);
+  if(isNaN(d)) return String(ds);
+  var mo=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return d.getDate()+' '+mo[d.getMonth()]+' '+(d.getFullYear()+543);
+}
+
+// ── TECHS ──
+async function loadTechs() {
+  var r = await apiCall('getTechnicians');
+  if(!r||!r.success) return;
+  S.techs=r.data||[];
+  populateSel(); renderTechList();
+}
+function populateSel() {
+  var sel=q('#techSel'); if(!sel) return;
+  var cur=sel.value;
+  sel.innerHTML='<option value="">— เลือกช่าง —</option>';
+  S.techs.forEach(function(t){
+    var o=document.createElement('option');
+    o.value=t; o.textContent=t;
+    if(t===cur) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+function renderTechList() {
+  var el=q('#techListEl'); if(!el) return;
+  if(!S.techs.length){ el.innerHTML='<div class="empty-st"><span>👷</span>ยังไม่มีรายชื่อช่าง</div>'; return; }
+  el.innerHTML=S.techs.map(function(t){
+    return '<div class="tech-row"><span class="tech-name">👷 '+esc(t)+'</span>'
+      +'<button class="btn-del-t" onclick="delTech(\''+esc(t)+'\')">🗑 ลบ</button></div>';
+  }).join('');
+}
+async function addTech() {
+  var inp=q('#newTechInp'); if(!inp) return;
+  var name=inp.value.trim();
+  if(!name){ toast('กรุณาใส่ชื่อช่าง','err'); return; }
+  var r=await apiCall('addTechnician',{name:name});
+  if(r&&r.success){ toast('เพิ่ม: '+name,'ok'); inp.value=''; loadTechs(); }
+  else toast('Error: '+(r?r.error:'?'),'err');
+}
+async function delTech(name) {
+  if(!confirm('ลบ "'+name+'" ?')) return;
+  var r=await apiCall('deleteTechnician',{name:name});
+  if(r&&r.success){ toast('ลบ: '+name,'ok'); loadTechs(); }
+  else toast('Error: '+(r?r.error:'?'),'err');
+}
+
+// ── IMAGE ──
+function trigUpload(){ var i=q('#imgInp'); if(i) i.click(); }
+function onImgSel(evt) {
+  Array.from(evt.target.files).forEach(function(file){
+    if(!file.type.startsWith('image/')) return;
+    // Compress image before storing
+    var reader=new FileReader();
+    reader.onload=function(e){
+      compressImage(e.target.result, file.type, function(compressed, preview){
+        S.pendingImgs.push({
+          base64: compressed.split(',')[1],
+          mimeType: file.type,
+          filename: file.name,
+          preview: preview
+        });
+        renderPrev();
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+  evt.target.value='';
+}
+
+function compressImage(dataUrl, mimeType, cb) {
+  var img = new Image();
+  img.onload = function(){
+    var MAX = 1200;
+    var w = img.width, h = img.height;
+    if(w > MAX || h > MAX){
+      if(w > h){ h = Math.round(h * MAX / w); w = MAX; }
+      else { w = Math.round(w * MAX / h); h = MAX; }
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    var compressed = canvas.toDataURL('image/jpeg', 0.75);
+    cb(compressed, compressed);
+  };
+  img.src = dataUrl;
+}
+
+function renderPrev() {
+  var el=q('#imgPrev'); if(!el) return;
+  el.innerHTML=S.pendingImgs.map(function(img,i){
+    return '<div class="ig-item" onclick="previewPending('+i+')">'
+      +'<img src="'+img.preview+'" alt="">'
+      +'<button class="ig-del" onclick="rmImg('+i+',event)">✕</button></div>';
+  }).join('');
+}
+function previewPending(i){ lbOpen(S.pendingImgs.map(function(x){return x.preview;}),i); }
+function rmImg(i,e){ e.stopPropagation(); S.pendingImgs.splice(i,1); renderPrev(); }
+
+// ── SUBMIT ──
+async function submitRec() {
+  var tech  = (q('#techSel')||{}).value||'';
+  var model = ((q('#modelName')||{}).value||'').trim();
+  var date  = (q('#workDate')||{}).value||'';
+  var qty   = (q('#qty')||{}).value||'';
+  var note  = ((q('#noteInp')||{}).value||'').trim();
+  if(!tech) { toast('กรุณาเลือกชื่อช่าง','err'); return; }
+  if(!date) { toast('กรุณาเลือกวันที่','err'); return; }
+  if(qty===''||Number(qty)<0) { toast('กรุณาใส่จำนวนตัว','err'); return; }
+  var btn=q('#btnSubmit'); if(btn) btn.disabled=true;
+  showLoader('อัพโหลดรูปภาพ...');
+  // Upload images
+  var urls = [];
+  for(var i=0;i<S.pendingImgs.length;i++){
+    var img=S.pendingImgs[i];
+    setLdrTxt('อัพโหลดรูป '+(i+1)+'/'+S.pendingImgs.length+'...');
+    var r=await apiCall('uploadImage',{base64:img.base64,filename:img.filename,mimeType:img.mimeType});
+    if(r&&r.success) urls.push(r.url);
+  }
+  setLdrTxt('บันทึกข้อมูล...');
+  var r2=await apiCall('saveWorkRecord',{
+    techName:tech, modelName:model, date:date,
+    quantity:Number(qty), note:note, imageUrls:urls
+  });
+  hideLoader(); if(btn) btn.disabled=false;
+  if(r2&&r2.success){
+    toast('บันทึกสำเร็จ! ('+r2.week+')','ok');
+    clearForm(); S.histLoaded=false;
+  } else toast('Error: '+(r2?r2.error:'?'),'err');
+}
+
+function clearForm() {
+  ['#techSel','#modelName','#qty','#noteInp'].forEach(function(s){var e=q(s);if(e) e.value='';});
+  S.pendingImgs=[]; renderPrev(); setToday(); onDateChg();
+}
+
+// ── HISTORY ──
+async function loadHistory() {
+  var el=q('#histList'); if(!el) return;
+  el.innerHTML='<div class="empty-st"><span>⏳</span>Loading...</div>';
+  var r=await apiCall('getAllRecords');
+  if(!r||!r.success){ el.innerHTML='<div class="empty-st"><span>⚠️</span>โหลดไม่สำเร็จ</div>'; return; }
+  S.allRecords=r.data||[]; S.histLoaded=true; renderHist();
+}
+function setHF(btn,f) {
+  qa('.fs-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); S.histFilter=f; renderHist();
+}
+function renderHist() {
+  var el=q('#histList'); if(!el) return;
+  var recs=S.allRecords.slice();
+  if(S.histFilter!=='all') recs=recs.filter(function(r){return r.week===S.histFilter;});
+  recs.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  if(!recs.length){ el.innerHTML='<div class="empty-st"><span>💬</span>ไม่มีรายการ</div>'; return; }
+  el.innerHTML='<div class="clist">'+recs.map(function(r){return rcardHtml(r);}).join('')+'</div>';
+}
+function rcardHtml(r) {
+  var wc=r.week==='Week 2'?'w2':r.week==='Week End'?'we':'';
+  var imgs=r.imageUrls||[];
+  var th=imgs.slice(0,3).map(function(u,i){
+    return '<img class="rc-img" src="'+u+'" loading="lazy" onclick="lbFromRec(\''+r.id+'\','+i+',event)" onerror="imgFallback(this)">';
+  }).join('');
+  if(imgs.length>3) th+='<div class="rc-more">+'+(imgs.length-3)+'</div>';
+  return '<div class="rcard '+wc+'" onclick="openDet(\''+r.id+'\')">'
+    +'<div class="rc-top"><div class="rc-tech">👷 '+esc(r.techName)+'</div><span class="rc-wbadge '+wc+'">'+r.week+'</span></div>'
+    +'<div class="rc-meta"><span>'+thDate(r.date)+'</span><span>'+r.quantity+' ตัว</span>'
+    +(r.modelName?'<span>'+esc(r.modelName)+'</span>':'')
+    +(imgs.length?'<span>'+imgs.length+' รูป</span>':'')+'</div>'
+    +(r.note?'<div class="rc-note">'+esc(r.note)+'</div>':'')
+    +(th?'<div class="rc-imgs">'+th+'</div>':'')
+    +'</div>';
+}
+
+// ── DETAIL MODAL ──
+function openDet(id) {
+  var r=S.allRecords.filter(function(x){return x.id===id;})[0]; if(!r) return;
+  var imgs=r.imageUrls||[];
+  var wc=r.week==='Week 2'?'w2':r.week==='Week End'?'we':'w1';
+  var gallery=imgs.map(function(u,i){
+    return '<img src="'+u+'" loading="lazy" onclick="lbFromRec(\''+r.id+'\','+i+',event)" onerror="imgFallback(this)">';
+  }).join('');
+  q('#modalBody').innerHTML=
+    '<div class="md-hd"><div class="md-title">👷 '+esc(r.techName)+'</div>'
+    +'<div class="md-tags"><span class="md-tag '+wc+'">'+r.week+'</span>'
+    +'<span class="md-tag">'+thDate(r.date)+'</span>'
+    +'<span class="md-tag">'+r.quantity+' ตัว</span>'
+    +(r.modelName?'<span class="md-tag">'+esc(r.modelName)+'</span>':'')
+    +(imgs.length?'<span class="md-tag">'+imgs.length+' รูป</span>':'')
+    +'</div></div>'
+    +(r.note?'<div class="md-note">'+esc(r.note)+'</div>':'')
+    +(gallery?'<div class="md-gallery">'+gallery+'</div>':'')
+    +'<button class="btn-del-full" onclick="doDelete(\''+r.id+'\',false)">🗑 ลบรายการนี้</button>';
+  openModal();
+}
+function lbFromRec(id,idx,e) {
+  if(e) e.stopPropagation();
+  var r=S.allRecords.filter(function(x){return x.id===id;})[0]; if(!r) return;
+  lbOpen(r.imageUrls||[],idx);
+}
+
+// ── DELETE ──
+async function doDelete(id, fromMgr) {
+  if(!confirm('ลบรายการนี้?')) return;
+  showLoader('กำลังลบ...');
+  var r=await apiCall('deleteRecord',{id:id});
+  hideLoader();
+  if(r&&r.success){
+    toast('ลบแล้ว','ok'); closeModal();
+    S.histLoaded=false;
+    if(q('#histList')) loadHistory();
+    if(fromMgr) loadManager();
+  } else toast('Error: '+(r?r.error:'?'),'err');
+}
+
+// ── MANAGER ──
+async function loadManager() {
+  var el=q('#mgrContent'), banner=q('#mgrBanner');
+  if(el) el.innerHTML='<div class="empty-st"><span>⏳</span>กำลังโหลด...</div>';
+  if(banner) banner.innerHTML='<div class="mb-loading">Loading...</div>';
+  var r=await apiCall('getSummaryReport');
+  if(!r||!r.success){
+    if(el) el.innerHTML='<div class="empty-st"><span>⚠️</span>โหลดไม่สำเร็จ</div>';
+    return;
+  }
+  S.allRecords=(r.data||[]).reduce(function(acc,s){return acc.concat(s.records||[]);}, []);
+  S._rptData=r.data||[];
+  renderBanner(r.data); renderMgr(r.data); setupSearch();
+}
+function renderBanner(data) {
+  var b=q('#mgrBanner'); if(!b) return;
+  var total=(data||[]).reduce(function(t,s){return t+(s.total||0);},0);
+  var techs=(data||[]).length;
+  var w1=(data||[]).reduce(function(t,s){return t+(s.week1||0);},0);
+  var w2=(data||[]).reduce(function(t,s){return t+(s.week2||0);},0);
+  b.innerHTML='<div class="mb-grid">'
+    +'<div class="mb-item"><div class="mb-val">'+total+'</div><div class="mb-lbl">รวม (ตัว)</div></div>'
+    +'<div class="mb-item"><div class="mb-val">'+techs+'</div><div class="mb-lbl">ช่าง (คน)</div></div>'
+    +'<div class="mb-item"><div class="mb-val">'+w1+'</div><div class="mb-lbl">Week 1</div></div>'
+    +'<div class="mb-item"><div class="mb-val">'+w2+'</div><div class="mb-lbl">Week 2</div></div>'
+    +'</div>';
+}
+function setMF(btn,f) {
+  qa('.mf-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); S.mgrFilter=f;
+  qa('.tc').forEach(function(card){ switchTcPanel(card,f); });
+}
+function renderMgr(data) {
+  var el=q('#mgrContent'); if(!el) return;
+  if(!data||!data.length){ el.innerHTML='<div class="empty-st"><span>📊</span>ไม่มีข้อมูล</div>'; return; }
+  el.innerHTML=data.map(function(s){return buildTcHtml(s);}).join('');
+  data.forEach(function(s){
+    var card=document.querySelector('.tc[data-tech="'+s.techName+'"]'); if(!card) return;
+    card.querySelectorAll('.wt-btn').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        card.querySelectorAll('.wt-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        switchTcPanel(card, btn.getAttribute('data-wk'));
+      });
+    });
+  });
+}
+function buildTcHtml(s) {
+  var allR=(s.records||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  var w1r=allR.filter(function(r){return r.week==='Week 1';});
+  var w2r=allR.filter(function(r){return r.week==='Week 2';});
+  var wer=allR.filter(function(r){return r.week==='Week End';});
+  return '<div class="tc" data-tech="'+esc(s.techName)+'">'
+    +'<div class="tc-head" onclick="toggleTc(this)">'
+    +'<div class="tc-hl"><div class="tc-av">👷</div>'
+    +'<div><div class="tc-name">'+esc(s.techName)+'</div><div class="tc-sub">'+(s.records||[]).length+' items</div></div></div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'
+    +'<div class="tc-total">📦 '+(s.total||0)+' ตัว</div>'
+    +'<span class="tc-chev">▼</span></div></div>'
+    +'<div class="tc-stats">'
+    +'<div class="tc-stat"><div class="tc-sv">'+(s.week1||0)+'</div><div class="tc-sl">Week 1</div></div>'
+    +'<div class="tc-stat"><div class="tc-sv">'+(s.week2||0)+'</div><div class="tc-sl">Week 2</div></div>'
+    +'<div class="tc-stat"><div class="tc-sv">'+(s.weekEnd||0)+'</div><div class="tc-sl">Week End</div></div>'
+    +'<div class="tc-stat"><div class="tc-sv">'+(s.total||0)+'</div><div class="tc-sl">รวม</div></div>'
+    +'</div>'
+    +'<div class="tc-body">'
+    +'<div class="tc-wtabs">'
+    +'<button class="wt-btn active" data-wk="all">ทั้งหมด ('+(s.records||[]).length+')</button>'
+    +'<button class="wt-btn" data-wk="Week 1">Week 1 ('+w1r.length+')</button>'
+    +'<button class="wt-btn" data-wk="Week 2">Week 2 ('+w2r.length+')</button>'
+    +'<button class="wt-btn" data-wk="Week End">Week End ('+wer.length+')</button>'
+    +'</div>'
+    +'<div class="tc-panel active" data-p="all">'+allR.map(function(r){return rriHtml(r);}).join('')+'</div>'
+    +'<div class="tc-panel" data-p="Week 1">'+w1r.map(function(r){return rriHtml(r);}).join('')+'</div>'
+    +'<div class="tc-panel" data-p="Week 2">'+w2r.map(function(r){return rriHtml(r);}).join('')+'</div>'
+    +'<div class="tc-panel" data-p="Week End">'+wer.map(function(r){return rriHtml(r);}).join('')+'</div>'
+    +'</div></div>';
+}
+function rriHtml(r) {
+  var imgs=r.imageUrls||[], MAX=6;
+  var gHtml='';
+  if(imgs.length){
+    gHtml='<div class="rri-gallery">'
+      +imgs.slice(0,MAX).map(function(u,i){
+        if(i===MAX-1&&imgs.length>MAX)
+          return '<div class="rri-more" onclick="lbFromRec(\''+r.id+'\','+i+',event)">+'+(imgs.length-MAX+1)+'</div>';
+        return '<img src="'+u+'" loading="lazy" onclick="lbFromRec(\''+r.id+'\','+i+',event)" onerror="imgFallback(this)">';
+      }).join('')+'</div>';
+  }
+  return '<div class="rri">'
+    +'<div class="rri-top"><div>'
+    +'<div class="rri-date">'+thDate(r.date)+'</div>'
+    +'<div class="rri-meta">'+(r.modelName?esc(r.modelName)+' · ':'')+r.quantity+' ตัว · '+r.week+(imgs.length?' · '+imgs.length+' รูป':'')+'</div>'
+    +'</div><button class="btn-del-r" onclick="doDelete(\''+r.id+'\',true)">🗑 ลบ</button></div>'
+    +(r.note?'<div class="rri-note">'+esc(r.note)+'</div>':'')
+    +gHtml+'</div>';
+}
+function toggleTc(hd) {
+  var body=hd.parentElement.querySelector('.tc-body');
+  var chev=hd.querySelector('.tc-chev');
+  var open=body.classList.toggle('open');
+  if(chev) chev.classList.toggle('open',open);
+}
+function switchTcPanel(card,wk) {
+  card.querySelectorAll('.tc-panel').forEach(function(p){p.classList.remove('active');});
+  var t=card.querySelector('.tc-panel[data-p="'+wk+'"]');
+  if(t) t.classList.add('active');
+}
+function setupSearch() {
+  var inp=q('#mgrSearch'); if(!inp) return;
+  inp.oninput=function(){
+    var v=inp.value.toLowerCase();
+    qa('.tc').forEach(function(c){
+      c.style.display=c.getAttribute('data-tech').toLowerCase().indexOf(v)>-1?'':'none';
+    });
+  };
+}
+
+// ── SHEET ──
+async function openSheet() {
+  var r=await apiCall('getSpreadsheetUrl');
+  if(r&&r.success) window.open(r.url,'_blank');
+  else { var url=getScriptUrl(); if(url) window.open(url,'_blank'); }
+}
+
+// ── MODAL / LIGHTBOX ──
+function openModal()  { var m=q('#modal'); if(m) m.classList.add('open'); }
+function closeModal() { var m=q('#modal'); if(m) m.classList.remove('open'); }
+function onMBg(e)     { if(e.target===q('#modal')) closeModal(); }
+function lbOpen(urls,idx) {
+  if(!urls||!urls.length) return;
+  S.lbUrls=urls; S.lbIdx=idx||0; lbShow();
+  var lb=q('#lb'); if(lb) lb.classList.add('open');
+}
+function lbShow() {
+  var img=q('#lbImg'), ctr=q('#lbCtr');
+  if(img) img.src=S.lbUrls[S.lbIdx];
+  if(ctr) ctr.textContent=(S.lbIdx+1)+' / '+S.lbUrls.length;
+}
+function lbNav(d,e) {
+  if(e) e.stopPropagation();
+  S.lbIdx=(S.lbIdx+d+S.lbUrls.length)%S.lbUrls.length; lbShow();
+}
+function lbClose() { var lb=q('#lb'); if(lb) lb.classList.remove('open'); }
+
+// ── LOADER / TOAST ──
+function showLoader(t){ setLdrTxt(t||'Loading...'); var e=q('#loader'); if(e) e.classList.add('show'); }
+function setLdrTxt(t){ var e=q('#loaderTxt'); if(e) e.textContent=t; }
+function hideLoader(){ var e=q('#loader'); if(e) e.classList.remove('show'); }
+var _tt;
+function toast(msg,type){
+  var el=q('#toast'); if(!el) return;
+  el.textContent=msg; el.className='toast show'+(type?' '+type:'');
+  clearTimeout(_tt); _tt=setTimeout(function(){ el.classList.remove('show'); },3200);
+}
+function imgFallback(img) {
+  var src=img.src||'';
+  var m=src.match(/[?&]id=([^&]+)/);
+  if(!m) m=src.match(/\/d\/([A-Za-z0-9_-]+)/);
+  if(m&&img.getAttribute('data-tried')!=='1'){
+    img.setAttribute('data-tried','1');
+    img.src='https://lh3.googleusercontent.com/d/'+m[1]+'=s800';
+  } else {
+    img.style.display='none';
+  }
+}
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     GOOGLE APPS SCRIPT CODE (copy to your Apps Script project)
+     
+     เพิ่มโค้ดนี้ใน Google Apps Script แล้ว Deploy เป็น Web App
+     Execute as: Me | Who has access: Anyone
+══════════════════════════════════════════════════════════
+<APPS_SCRIPT_CODE>
+
+// ═══ Code.gs ═══
+var SHEET_ID = 'YOUR_SPREADSHEET_ID'; // แทนที่ด้วย ID ของ Google Sheets ของคุณ
+var FOLDER_ID = 'YOUR_DRIVE_FOLDER_ID'; // แทนที่ด้วย ID ของ Google Drive Folder สำหรับรูป
+
+function doGet(e) {
+  var action = e.parameter.action;
+  try {
+    if (action === 'getTechnicians') return jsonOut(getTechnicians());
+    if (action === 'getAllRecords')   return jsonOut(getAllRecords());
+    if (action === 'getSummaryReport') return jsonOut(getSummaryReport());
+    if (action === 'getSpreadsheetUrl') return jsonOut(getSpreadsheetUrl());
+    return jsonOut({ success: false, error: 'Unknown action: ' + action });
+  } catch(e) {
+    return jsonOut({ success: false, error: e.toString() });
+  }
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var action = data.action;
+    if (action === 'saveWorkRecord')   return jsonOut(saveWorkRecord(data));
+    if (action === 'deleteRecord')     return jsonOut(deleteRecord(data.id));
+    if (action === 'addTechnician')    return jsonOut(addTechnician(data.name));
+    if (action === 'deleteTechnician') return jsonOut(deleteTechnician(data.name));
+    if (action === 'uploadImage')      return jsonOut(uploadImage(data.base64, data.filename, data.mimeType));
+    return jsonOut({ success: false, error: 'Unknown action: ' + action });
+  } catch(e) {
+    return jsonOut({ success: false, error: e.toString() });
+  }
+}
+
+function jsonOut(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getSheet(name) {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sh = ss.getSheetByName(name);
+  if (!sh) {
+    sh = ss.insertSheet(name);
+    if (name === 'Records') {
+      sh.appendRow(['ID','ชื่อช่าง','ชื่อรูป/รุ่น','วันที่','จำนวน','รอบ','หมายเหตุ','รูปภาพ (URLs)','Timestamp']);
+      sh.getRange(1,1,1,9).setFontWeight('bold').setBackground('#f472b6').setFontColor('#ffffff');
+    }
+    if (name === 'Technicians') {
+      sh.appendRow(['ชื่อช่าง','วันที่เพิ่ม']);
+      sh.getRange(1,1,1,2).setFontWeight('bold').setBackground('#2563eb').setFontColor('#ffffff');
+    }
+  }
+  return sh;
+}
+
+function getTechnicians() {
+  var sh = getSheet('Technicians');
+  var data = sh.getDataRange().getValues();
+  var techs = [];
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0]) techs.push(String(data[i][0]));
+  }
+  return { success: true, data: techs };
+}
+
+function addTechnician(name) {
+  var sh = getSheet('Technicians');
+  var data = sh.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]).toLowerCase() === name.toLowerCase())
+      return { success: false, error: 'ชื่อนี้มีอยู่แล้ว' };
+  }
+  sh.appendRow([name, new Date().toISOString()]);
+  return { success: true };
+}
+
+function deleteTechnician(name) {
+  var sh = getSheet('Technicians');
+  var data = sh.getDataRange().getValues();
+  for (var i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][0]) === name) { sh.deleteRow(i + 1); break; }
+  }
+  return { success: true };
+}
+
+function getAllRecords() {
+  var sh = getSheet('Records');
+  var data = sh.getDataRange().getValues();
+  var records = [];
+  for (var i = 1; i < data.length; i++) {
+    if (!data[i][0]) continue;
+    var urls = data[i][7] ? String(data[i][7]).split(',').map(function(u){ return u.trim(); }).filter(Boolean) : [];
+    records.push({
+      id: String(data[i][0]),
+      techName: String(data[i][1]),
+      modelName: String(data[i][2]||''),
+      date: String(data[i][3]),
+      quantity: Number(data[i][4])||0,
+      week: String(data[i][5]),
+      note: String(data[i][6]||''),
+      imageUrls: urls
+    });
+  }
+  records.reverse();
+  return { success: true, data: records };
+}
+
+function saveWorkRecord(data) {
+  var sh = getSheet('Records');
+  var id = 'REC' + new Date().getTime();
+  var week = weekOf(data.date);
+  var urlStr = (data.imageUrls||[]).join(', ');
+  sh.appendRow([id, data.techName, data.modelName||'', data.date, data.quantity, week, data.note||'', urlStr, new Date().toISOString()]);
+  // Insert clickable image formulas in a new column if desired
+  if (data.imageUrls && data.imageUrls.length > 0) {
+    var row = sh.getLastRow();
+    var imgFormulas = data.imageUrls.map(function(u){
+      return '=IMAGE("'+u+'",4,60,60)';
+    });
+    // Add images to columns 9+ (column I onwards)
+    for (var i = 0; i < imgFormulas.length && i < 5; i++) {
+      sh.getRange(row, 9+i).setFormula(imgFormulas[i]);
+    }
+  }
+  return { success: true, week: week };
+}
+
+function deleteRecord(id) {
+  var sh = getSheet('Records');
+  var data = sh.getDataRange().getValues();
+  for (var i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][0]) === id) { sh.deleteRow(i + 1); break; }
+  }
+  return { success: true };
+}
+
+function uploadImage(base64, filename, mimeType) {
+  try {
+    var folder = DriveApp.getFolderById(FOLDER_ID);
+    var blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, filename);
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    var fileId = file.getId();
+    var url = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w800';
+    return { success: true, url: url, fileId: fileId };
+  } catch(e) {
+    return { success: false, error: e.toString() };
+  }
+}
+
+function getSummaryReport() {
+  var recs = getAllRecords();
+  if (!recs.success) return recs;
+  var grouped = {};
+  recs.data.forEach(function(r) {
+    if (!grouped[r.techName]) {
+      grouped[r.techName] = { techName: r.techName, records: [], week1: 0, week2: 0, weekEnd: 0, total: 0 };
+    }
+    grouped[r.techName].records.push(r);
+    grouped[r.techName].total += r.quantity;
+    if (r.week === 'Week 1') grouped[r.techName].week1 += r.quantity;
+    if (r.week === 'Week 2') grouped[r.techName].week2 += r.quantity;
+    if (r.week === 'Week End') grouped[r.techName].weekEnd += r.quantity;
+  });
+  return { success: true, data: Object.values(grouped) };
+}
+
+function getSpreadsheetUrl() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  return { success: true, url: ss.getUrl() };
+}
+
+function weekOf(ds) {
+  if (!ds) return '';
+  var d = new Date(ds + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  var day = d.getDate();
+  var last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  if (day === last) return 'Week End';
+  return day <= 14 ? 'Week 1' : 'Week 2';
+}
+
+</APPS_SCRIPT_CODE>
+-->
+
+</body>
+</html>
